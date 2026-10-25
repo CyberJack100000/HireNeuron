@@ -4,7 +4,7 @@
 
 
 Developed by :-
-Souparna Saha
-Aryan Kushwaha
-Gourav Das
+Souparna Saha,
+Aryan Kushwaha,
+Gourav Das and
 Priyanshu Singhal
