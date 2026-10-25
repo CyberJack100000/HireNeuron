@@ -1,0 +1,20 @@
+Souparna Saha
+26ee3014@rgipt.ac.in | +91 98765 00000
+
+Summary
+Backend engineer with 5 years of experience building payment and inventory systems in Java.
+
+Experience
+- Backend Engineer, Acme Payments (2021 - 2026): Java, Spring Boot microservices, PostgreSQL, Kafka, Docker
+- Software Engineer, Retail Labs (2019 - 2021): REST API development and SQL reporting
+
+Projects
+- Payments gateway: Java Spring Boot services with Kafka events, idempotent retries and Docker deployment
+- Inventory sync: REST API and PostgreSQL batch pipeline handling 2M records per night
+- Fraud rules engine: rule evaluation service with unit and integration testing in CI
+
+Education
+B.Tech Computer Science, Rajiv Gandhi Institute of Petroleum Technology
+
+Certifications
+- AWS Certified Developer Associate

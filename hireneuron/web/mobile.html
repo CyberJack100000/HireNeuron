@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<script>(function(){try{var t=localStorage.getItem("hn_theme");if(!t&&window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)t="dark";if(t)document.documentElement.dataset.theme=t}catch(e){}})()</script>
+<title>HireNeuron | Second camera</title>
+<link rel="stylesheet" href="/static/app.css">
+<style> main { padding: 20px var(--m) 60px; max-width: 560px; margin: 0 auto; display: grid; gap: 16px; } video { width: 100%; background: #0b140f; aspect-ratio: 3/4; object-fit: cover; display: block; }
+  .state { padding: 14px 16px; font-weight: 700; background: var(--paper-2); } .state.ok { background: var(--low-t); } .state.bad { background: var(--high-t); } ol { padding-left: 20px; list-style: decimal; display: grid; gap: 6px; } </style>
+</head>
+<body>
+<main>
+  <div style="display:flex;justify-content:space-between;align-items:center"><h1 class="brand" style="font-size:28px">Hire<span>Neuron</span></h1><span id="theme-slot"></span></div>
+  <h2>Use this phone as a second camera</h2>
+  <ol><li>Prop the phone up so it shows your desk and the area around you from the side or behind.</li><li>Tap Start camera and allow access.</li><li>Keep this page open and the screen on until the interview ends.</li></ol>
+  <div class="state" id="state" role="status">Ready</div>
+  <video id="v" autoplay muted playsinline aria-label="Phone camera preview"></video>
+  <button class="btn" id="go">Start camera</button>
+  <p class="small muted">Your phone video is sent directly to your interview page and is only analysed or recorded with the consent you gave there.</p>
+</main>
+<script src="/static/common.js"></script>
+<script>
+const tok = location.pathname.split('/').pop(); const st = $('#state'); const say = (m, c = '') => { st.textContent = m; st.className = 'state ' + c; };
+$('#theme-slot').append(Theme.button());
+let ws, pc, stream, over = false, wake = null;
+function stopEverything() {   // the interview is over: camera off, connection closed, nothing can restart it
+  over = true;
+  try { if (stream) stream.getTracks().forEach((t) => t.stop()); } catch {} stream = null; $('#v').srcObject = null; $('#v').hidden = true; $('#go').hidden = true;
+  try { if (pc) pc.close(); } catch {} pc = null; try { if (ws) ws.close(); } catch {} try { if (wake) wake.release(); } catch {}
+  say('The interview has ended. Your camera is off. You can close this page.', 'ok');
+}
+function connect() {
+  ws = new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/ws/pair/${tok}/phone`);
+  ws.onopen = () => say('Connected. Waiting for the interview page…', 'ok');
+  ws.onclose = (e) => { if (over) return; if (e.code === 4410) return stopEverything(); say(e.code === 4404 ? 'This link has expired. Scan the QR code again.' : 'Disconnected. Reconnecting…', 'bad'); if (e.code !== 4404 && e.code !== 4409) setTimeout(connect, 2000); };
+  ws.onmessage = async (m) => { const d = JSON.parse(m.data);
+    if (d.type === 'end') return stopEverything();
+    if (d.type === 'desktop-ready') offer();
+    if (d.type === 'answer') await pc.setRemoteDescription(d);
+    if (d.type === 'ice') { try { await pc.addIceCandidate(d.candidate); } catch {} } };
+}
+async function offer() {
+  if (!stream) return; pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
+  stream.getVideoTracks().forEach((t) => pc.addTrack(t, stream));
+  pc.onicecandidate = (e) => { if (e.candidate && ws.readyState === 1) ws.send(JSON.stringify({ type: 'ice', candidate: e.candidate })); };
+  pc.onconnectionstatechange = () => { if (pc.connectionState === 'connected') say('Streaming to your interview. Keep this page open.', 'ok'); if (pc.connectionState === 'failed') say('Connection problem. Reload this page.', 'bad'); };
+  await pc.setLocalDescription(await pc.createOffer()); ws.send(JSON.stringify(pc.localDescription));
+}
+$('#go').addEventListener('click', async () => {
+  if (!window.isSecureContext) return say('Your browser blocks the camera on non-HTTPS pages. Ask the recruiter for an HTTPS link.', 'bad');
+  try { await api('/api/pair/' + tok); } catch (e) { return say(e.message, 'bad'); }
+  try { stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment', width: 1280, height: 720 }, audio: false }); } catch { return say('Camera access was blocked. Allow it in your browser settings and try again.', 'bad'); }
+  $('#v').srcObject = stream; $('#go').hidden = true; stream.getVideoTracks()[0].addEventListener('ended', () => say('Camera stopped.', 'bad'));
+  try { wake = await navigator.wakeLock.request('screen'); } catch {}
+  connect();
+});
+</script>
+</body>
+</html>

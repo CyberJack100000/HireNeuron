@@ -1,0 +1,18 @@
+Senior Java Backend Engineer
+Payments Platform Team
+
+We are looking for a backend engineer with 6+ years of experience to build and run the services behind our payments platform.
+
+Responsibilities:
+- Design and build Spring Boot microservices that process millions of transactions a day
+- Own PostgreSQL schemas, query performance and data consistency across services
+- Build event-driven pipelines with Kafka and make them reliable under failure
+- Deploy and operate services with Docker and Kubernetes on AWS
+- Review code, mentor teammates and improve testing and CI/CD practices
+
+Requirements:
+- Strong Java and Spring Boot
+- Experience with microservices, REST API design and Kafka
+- Solid SQL and PostgreSQL
+- Docker, Kubernetes and AWS
+- Clear communication and ownership

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<script>(function(){try{var t=localStorage.getItem("hn_theme");if(!t&&window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)t="dark";if(t)document.documentElement.dataset.theme=t}catch(e){}})()</script>
+<title>HireNeuron | Your interview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/app.css">
+<style>
+  main { padding-block: clamp(20px, 3vw, 48px) 80px; }
+  .steps { max-width: 760px; display: grid; gap: 20px; }
+  .rules li { padding: 10px 0 10px 18px; position: relative; } .rules li::before { content: ""; position: absolute; left: 0; top: 1.15em; width: 7px; height: 7px; background: var(--accent); }
+  .check { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start; background: var(--paper); padding: 14px 16px; }
+  .check input { width: 22px; height: 22px; margin-top: 3px; accent-color: var(--accent); }
+  video { width: 100%; background: #0b140f; display: block; aspect-ratio: 4/3; object-fit: cover; }
+  .cam { display: grid; grid-template-columns: minmax(0, 420px) 1fr; gap: 24px; align-items: start; }
+  .meter { height: 14px; background: var(--paper-2); } .meter i { display: block; height: 100%; background: var(--low); width: 100%; transform: scaleX(0); transform-origin: left; transition: transform .1s linear; }
+  .status { display: grid; gap: 8px; } .status li { display: flex; gap: 10px; align-items: center; background: var(--paper); padding: 10px 14px; } .dot { width: 12px; height: 12px; background: var(--paper-2); flex: none; } .dot.ok { background: var(--low); } .dot.bad { background: var(--high); } .dot.wait { background: var(--med); }
+  .room { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: clamp(14px, 2vw, 28px); align-items: start; }
+  .iv { background: var(--field); color: var(--field-ink); padding: clamp(20px, 3vw, 44px); display: grid; gap: 22px; min-height: 360px; align-content: start; }
+  .iv-head { display: flex; align-items: center; gap: 16px; }
+  .face { width: 64px; height: 64px; background: var(--field-ink); border-radius: 50%; position: relative; flex: none; }
+  .face::after { content: ""; position: absolute; inset: -8px; border-radius: 50%; background: var(--field-ink); opacity: 0; transform: scale(.9); }
+  .face.talking::after { animation: talk 1s ease-in-out infinite; }
+  @keyframes talk { 0% { opacity: .35; transform: scale(.95); } 100% { opacity: 0; transform: scale(1.35); } }
+  .iv h2 { font-size: clamp(24px, 3vw, 38px); line-height: 1.15; color: var(--field-ink); } .iv .tag { background: var(--field-2); color: var(--field-ink); }
+  .answer-box { background: var(--white); padding: clamp(16px, 2vw, 26px); display: grid; gap: 12px; }
+  .answer-box textarea { width: 100%; min-height: 150px; background: var(--paper); border: 0; padding: 14px; font-size: 18px; resize: vertical; line-height: 1.5; }
+  .side { display: grid; gap: 12px; } .side .panel { padding: 16px; }
+  .timer { font-size: 44px; font-weight: 800; letter-spacing: -0.04em; line-height: 1; } .timer.low { color: var(--danger-text); }
+  .banner { background: var(--med); color: var(--on-warm); padding: 12px 16px; font-weight: 700; }
+  .qr { background: #fff; padding: 12px; width: 300px; max-width: 100%; } .qr svg { width: 100%; height: auto; display: block; }
+  .demo { background: var(--info-t); padding: 14px 16px; display: grid; gap: 8px; } .demo .row { display: flex; flex-wrap: wrap; gap: 6px; }
+  .actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  #gaze-layer { position: fixed; inset: 0; z-index: 80; background: var(--overlay); pointer-events: none; }
+  /* the message sits UNDER the dot (lower z-index) so the dot is never hidden when it passes over the text */
+  #gaze-msg { position: absolute; z-index: 1; left: 50%; top: 20px; transform: translateX(-50%); background: var(--ink); color: var(--paper); padding: 14px 18px; max-width: min(640px, 92vw); display: flex; gap: 16px; align-items: center; pointer-events: auto; transition: opacity .4s; }
+  #gaze-msg.compact { opacity: .55; font-size: 14px; padding: 8px 12px; }
+  #gaze-dot { position: absolute; z-index: 2; left: 0; top: 0; width: 30px; height: 30px; margin: -15px 0 0 -15px; border-radius: 50%; background: var(--dot); outline: 4px solid #fff; will-change: transform; pointer-events: none; }
+  #live-tile { position: fixed; left: var(--m); bottom: 20px; z-index: 70; width: 260px; background: var(--ink); color: var(--paper); padding: 8px; display: grid; gap: 6px; }
+  #live-tile video { aspect-ratio: 4/3; }
+  #live-tile .row { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; }
+  .nav-chips { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .chip-q { background: var(--paper-2); padding: 6px 12px; font-weight: 700; min-width: 44px; text-align: center; transition: transform .2s var(--ease), background-color .2s; }
+  .chip-q:hover { transform: translateY(-2px); background: var(--quiet-hover); } .chip-q.skipped { background: var(--med-t); } .chip-q.current { background: var(--accent); color: var(--accent-ink); } .chip-q.here { outline: 3px solid var(--accent); }
+  .msg-banner { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 90; background: var(--accent); color: var(--accent-ink); padding: 14px 18px; display: flex; gap: 16px; align-items: center; max-width: min(720px, 94vw); font-weight: 500; }
+  .gate { background: var(--info-t); padding: 12px 16px; font-weight: 500; }
+  .tips { font-size: 14px; }
+  #gaze-msg .btn { flex: none; white-space: nowrap; }
+  @media (max-width: 960px) { .room, .cam { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap top-in"><span class="brand">Hire<span>Neuron</span></span><span class="muted small" id="who"></span><span id="theme-slot"></span></div></header>
+<main class="wrap" id="app" aria-live="polite"><p class="muted">Loading your interview…</p></main>
+<script src="/static/common.js"></script>
+<script src="/static/proctor.js"></script>
+<script src="/static/gaze.js"></script>
+<script src="/static/dictation.js"></script>
+<script src="/static/candidate.js"></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+fastapi>=0.110
+uvicorn[standard]>=0.29
+python-multipart>=0.0.9
+pypdf>=4.0
+segno>=1.6
+# optional: LLM grading/question enrichment when ANTHROPIC_API_KEY is set
+anthropic>=0.40
+# dev
+pytest>=8
+httpx>=0.27

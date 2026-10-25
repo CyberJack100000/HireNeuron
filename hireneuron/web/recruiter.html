@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<script>(function(){try{var t=localStorage.getItem("hn_theme");if(!t&&window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)t="dark";if(t)document.documentElement.dataset.theme=t}catch(e){}})()</script>
+<title>HireNeuron | AI Interview Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/app.css">
+<style>
+  .top-in nav { display: flex; gap: 12px; align-items: center; }
+  main { padding-block: clamp(24px, 4vw, 56px) 96px; }
+  .head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 16px; margin-bottom: 28px; }
+  .list { display: grid; gap: 8px; }
+  .row { display: grid; grid-template-columns: 2fr 2fr 1.7fr .6fr 1.2fr; gap: 16px; align-items: center; padding: 18px 22px; background: var(--white); text-decoration: none; color: var(--ink); font-weight: 500; transition: transform .2s var(--ease), background-color .2s; }
+  .row:hover { transform: translateX(6px); background: var(--row-hover); }
+  .row strong { font-weight: 800; font-size: 19px; letter-spacing: -0.02em; }
+  .score { font-size: 28px; font-weight: 800; letter-spacing: -0.04em; }
+  .empty { padding: clamp(32px, 6vw, 80px); background: var(--white); display: grid; gap: 16px; justify-items: start; }
+  .two { grid-template-columns: 1fr 1fr; } .three { grid-template-columns: repeat(3, 1fr); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { background: var(--paper-2); padding: 4px 12px; font-weight: 500; font-size: 15px; } .chip.ok { background: var(--low-t); } .chip.no { background: var(--high-t); }
+  .qcard { background: var(--white); padding: clamp(18px, 2.2vw, 28px); display: grid; gap: 14px; }
+  .qhead { display: flex; justify-content: space-between; gap: 16px; align-items: start; }
+  .qhead h3 { max-width: 60ch; }
+  .big { font-size: clamp(44px, 6vw, 88px); font-weight: 800; letter-spacing: -0.05em; line-height: 1; }
+  .answer { background: var(--paper); padding: 14px 16px; white-space: pre-wrap; }
+  .ev { background: var(--low-t); padding: 8px 12px; font-size: 15px; } .follow { background: var(--info-t); padding: 12px 14px; font-size: 15px; }
+  .tl { display: grid; gap: 8px; }
+  .ev-row { display: grid; grid-template-columns: 70px 1fr auto; gap: 16px; align-items: start; background: var(--white); padding: 14px 18px; }
+  .ev-row.high { background: var(--high-t); } .ev-row.medium { background: var(--med-t); } .ev-row.dismissed { opacity: .55; }
+  .ev-row img { width: 160px; display: block; margin-top: 8px; }
+  .dim { display: grid; grid-template-columns: 220px 1fr 50px; gap: 14px; align-items: center; }
+  .actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .note { background: var(--info-t); padding: 14px 18px; font-size: 15px; }
+  video { width: 100%; max-width: 720px; background: #000; }
+  .link-box { background: var(--paper); padding: 14px 16px; word-break: break-all; font-weight: 500; }
+  .live-grid { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); align-items: start; }
+  @media (max-width: 900px) { .live-grid { grid-template-columns: minmax(0, 1fr); } .row, .two, .three { grid-template-columns: 1fr; } .dim { grid-template-columns: 1fr 1fr 40px; } .ev-row { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap top-in">
+  <a class="brand" href="#/">Hire<span>Neuron</span></a>
+  <nav id="nav"></nav>
+</div></header>
+<main class="wrap" id="app" aria-live="polite"></main>
+<script src="/static/common.js"></script>
+<script src="/static/recruiter.js"></script>
+</body>
+</html>
